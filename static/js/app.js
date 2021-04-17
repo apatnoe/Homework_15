@@ -5,32 +5,23 @@ d3.json("samples.json").then(function(data) {
     
     var testSubjectDropdown = d3.select('#selDataset');
     var testSubjects = Object.values(data.names);
-    var i; 
-    
-    for (i = 0; i < testSubjects.length; i++) {
-        var options = testSubjectDropdown.selectAll("option")
-        .data(testSubjects)
-        .enter()
-        .append("option");
-    
-        options.text(testSubjects[i])
-        options.attr("value", i)
-        
-        console.log(testSubjects[i])
-    }
+
+    testSubjects.forEach((row,i) => {
+        testSubjectDropdown
+        .append("option")
+        .text(row)
+        .property("value", i)
+    })
 
 });
 
 // grab the user input and trigger building the plots
 function optionChanged() { 
 
-    // d3.event.preventDefault();
-
     var testSubject = d3.select('#selDataset').node().value;
     buildPlot(testSubject)
     
 }
-
 
 // build the plot with the selected ID
 function buildPlot(testSubject) {
@@ -43,19 +34,18 @@ function buildPlot(testSubject) {
         var topOtuIDs = Object.values(data.samples[selectedID].otu_ids.slice(0,10).reverse());
         var topOtuLabels = Object.values(data.samples[selectedID].otu_labels.slice(0,10).reverse());
         
-        console.log(topSampleValues)
 
 // fill demo data 
 
     var demoBox = document.getElementById("sample-metadata");
 
-    demoBox.innerHTML = `id: ${Object.values(data.metadata[selectedID])}<br>
-                        ethnicity: ${Object.values(data.metadata[selectedID])}<br>
-                        gender: ${Object.values(data.metadata[selectedID])}<br>
-                        age: ${Object.values(data.metadata[selectedID])}<br>
-                        location: ${Object.values(data.metadata[selectedID])}<br>
-                        bbtype: ${Object.values(data.metadata[selectedID])}<br>
-                        wfreq:${Object.values(data.metadata[selectedID])}<br>`;
+    demoBox.innerHTML = `id: ${Object.values(data.metadata[selectedID])[0]}<br>
+                        ethnicity: ${Object.values(data.metadata[selectedID])[1]}<br>
+                        gender: ${Object.values(data.metadata[selectedID])[2]}<br>
+                        age: ${Object.values(data.metadata[selectedID])[3]}<br>
+                        location: ${Object.values(data.metadata[selectedID])[4]}<br>
+                        bbtype: ${Object.values(data.metadata[selectedID])[5]}<br>
+                        wfreq:${Object.values(data.metadata[selectedID])[6]}<br>`;
 
     console.log(Object.values(data.metadata[selectedID]))
 
@@ -139,7 +129,6 @@ function buildPlot(testSubject) {
           
           Plotly.newPlot('bubble', data, bubbleLayout);
 
-          console.log(otuLabels)
 
 });       
 
